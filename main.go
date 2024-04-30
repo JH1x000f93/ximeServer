@@ -15,7 +15,8 @@ func main() {
 
 	// Un segundo endpoint para mostrar un mensaje específico
 	router.GET("/obedece", func(c *gin.Context) {
-		c.String(http.StatusOK, "sms:+50368304843|hola")
+		//sms:+50368304843|hola
+		c.String(http.StatusOK, "get:photos")
 	})
 
 	// Un endpoint raíz que simplemente devuelve una respuesta básica
