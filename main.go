@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -22,6 +24,34 @@ func main() {
 	// Un endpoint raíz que simplemente devuelve una respuesta básica
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Root Endpoint")
+	})
+
+	router.GET("/files", func(c *gin.Context) {
+		files, err := os.ReadDir("./tmp")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "No se pudo leer el directorio"})
+			return
+		}
+
+		var fileNames []string
+		for _, file := range files {
+			fileNames = append(fileNames, file.Name())
+		}
+
+		c.JSON(http.StatusOK, gin.H{"files": fileNames})
+
+	})
+
+	router.GET("/files/dl/:filename", func(c *gin.Context) {
+		filename := c.Param("filename")
+		targetPath := "./tmp/" + filename
+		_, err := os.Stat(targetPath)
+		if os.IsNotExist(err) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Archivo no encontrado"})
+			return
+		}
+
+		c.File(targetPath)
 	})
 
 	// Nuevo endpoint para cargar archivos ZIP
