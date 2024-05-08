@@ -63,7 +63,7 @@ func main() {
 		}
 
 		// Limitar el tamaño del archivo a 20MB
-		const maxFileSize = 20 << 20 // 20 MB
+		const maxFileSize = 200  << 20 // 20 MB
 		if file.Size > maxFileSize {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "El archivo excede el tamaño máximo permitido"})
 			return
